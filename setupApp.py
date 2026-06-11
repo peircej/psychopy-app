@@ -45,7 +45,7 @@ def find_library(libName):
         libPath = libPath[0]  # take the first match
     if libPath:
         print(f"Using {libName} library: {libPath}")
-        return libPath
+        return str(libPath)
     
 #define the extensions to compile if necess
 packageData = []
