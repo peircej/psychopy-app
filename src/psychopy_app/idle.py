@@ -69,12 +69,6 @@ tasks['showNews'] = {
     'tstart': None, 'tEnd': None,
     'thread': False,
 }
-tasks['getPavloviaUser'] = {
-    'status': NOT_STARTED,
-    'func': pavlovia_ui.menu.PavloviaMenu.setUser,
-    'tstart': None, 'tEnd': None,
-    'thread': False,
-}
 
 currentTask = None
 
