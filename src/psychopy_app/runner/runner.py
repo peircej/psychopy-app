@@ -973,7 +973,7 @@ class RunnerPanel(wx.Panel, ScriptProcess, handlers.ThemeMixin):
         output path: str
             The output path, relative to parent folder.
         """
-        return self.currentExperiment.settings.params['HTML path'].val
+        return ""
 
     def loadExperiment(self):
         """
