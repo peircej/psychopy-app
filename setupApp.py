@@ -30,7 +30,7 @@ compile_po.compilePoFiles()
 def find_library(libName):
     """Search for the specified library in system paths and homebrew directories."""
 
-    libPath = util.find_library(libName)
+    # libPath = util.find_library(libName)
     if libPath:
         print(f"Found {libName} library in system paths: {libPath}")
         return libPath
