@@ -31,14 +31,14 @@ def find_library(libName):
     """Search for the specified library in system paths and homebrew directories."""
 
     # libPath = util.find_library(libName)
-    if libPath:
-        print(f"Found {libName} library in system paths: {libPath}")
-        return libPath
-    # else search homebrew
+    # if libPath:
+    #     print(f"Found {libName} library in system paths: {libPath}")
+    #     return libPath
+    # search homebrew
     if platform.machine() == 'arm64':
         homebrewLibs = Path('/opt/homebrew')  # default homebrew location on Apple Silicon
     else:
-        homebrewLibs = Path('/usr/local/libs')  # default homebrew location on Intel Macs
+        homebrewLibs = Path('/usr/local/lib')  # default homebrew location on Intel Macs
     libPath = list(homebrewLibs.glob(f'**/{libName}.dylib'))
     if len(libPath) > 0:
         print(f"Found multiple {libName} libraries: {libPath}")
