@@ -468,14 +468,14 @@ class ParamNotebook(wx.Notebook, handlers.ThemeMixin):
             for name in ['startVal', 'startType', 'startEstim']:
                 if name in sortedParams:
                     startParams[name] = sortedParams.pop(name)
-            if startParams:
+            if 'startVal' in startParams:
                 self.startCtrl = self.addStartStopCtrl(startParams)
             # Make stop controls
             stopParams = OrderedDict()
             for name in ['stopVal', 'stopType', 'durationEstim']:
                 if name in sortedParams:
                     stopParams[name] = sortedParams.pop(name)
-            if stopParams:
+            if 'stopVal' in stopParams:
                 self.stopCtrl = self.addStartStopCtrl(stopParams)
             # Make controls
             for name, param in sortedParams.items():
