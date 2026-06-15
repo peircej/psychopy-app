@@ -37,7 +37,6 @@ dependencies = [
     # pavlovia connections
     "python-gitlab",
     "gitpython",
-    "cryptography",  # for sshkeys
     # psychoJS conversions
     "astunparse",
     "esprima",
