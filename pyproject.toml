@@ -5,6 +5,7 @@ dynamic = ["version"]
 requires-python = ">=3.9, <3.12"
 description = "The PsychoPy App is the wxPython application to support the PsychoPy lib but also see PsychoPy Studio"
 readme ={file = "README.md", content-type = "text/markdown"}
+license = "GPL-3.0-or-later"
 authors = [
     {name = "Open Science Tools Ltd", email = "support@opensciencetools.org"},
 ]
@@ -21,9 +22,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Topic :: Scientific/Engineering",
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     ]
-
 dependencies = [
     "psychopy",
     "websockets",  # new in 2023.2 for session.py
