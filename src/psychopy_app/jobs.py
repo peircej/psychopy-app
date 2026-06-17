@@ -304,7 +304,6 @@ class Job:
 
         # bind the event called when the process ends
         # self._process.Bind(wx.EVT_END_PROCESS, self.onTerminate)
-        print(f"app is {getAppInstance()}")
         self.parent.Bind(wx.EVT_IDLE, self.poll)
 
         return self._pid
