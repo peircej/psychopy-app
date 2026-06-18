@@ -352,7 +352,7 @@ class SingleLineCtrl(BaseParamCtrl):
                         ).format(name, used), allowed=True)
         else:
             # check any dynamic parameters
-            if self.param.updates == "constant": 
+            if self.param.updates == "constant" and self.param.allowedUpdates: 
                 # if references a name, is it one defined before experiment start?
                 for name in variables:
                     if name not in NameSpace.nonUserBuilder:
