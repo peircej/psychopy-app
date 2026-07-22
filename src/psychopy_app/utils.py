@@ -1476,21 +1476,21 @@ class FrameSwitcher(wx.Menu):
         items = {}
 
         # Builder
-        if "BuilderFrame" in str(frame):
+        if "BuilderFrame" not in str(frame):
             items['builder'] = parent.Append(
                 wx.ID_ANY, _translate("Show &builder"), _translate("Show Builder")
             )
             parent.Bind(wx.EVT_MENU, app.showBuilder, items['builder'])
 
         # Coder
-        if "CoderFrame" in str(frame):
+        if "CoderFrame" not in str(frame):
             items['coder'] = parent.Append(
                 wx.ID_ANY, _translate("Show &coder"), _translate("Show Coder")
             )
             parent.Bind(wx.EVT_MENU, app.showCoder, items['coder'])
 
         # Runner
-        if "RunnerFrame" in str(frame):
+        if "RunnerFrame" not in str(frame):
             items['runner'] = parent.Append(
                 wx.ID_ANY, _translate("Show &runner"), _translate("Show Runner")
             )

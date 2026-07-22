@@ -813,7 +813,13 @@ class BuilderFrame(BaseAuiFrame, handlers.ThemeMixin):
         if self.app.runner:
             self.app.runner.addTask(fileName=self.filename)  # Add to Runner
 
-        self.project = pavlovia.getProject(filename)
+        try:
+            self.project = pavlovia.getProject(filename)
+        except Exception as err:
+            # experiment might not need Pavlovia, so demote the error to logging
+            logging.error(
+                f"Failed to load Pavlovia project associated with {self.filename}, reason: {err}"
+            )
         self.app.updateWindowMenu()
 
     def fileReveal(self, evt=None):

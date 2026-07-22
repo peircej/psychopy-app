@@ -83,6 +83,7 @@ build-backend = "pdm.backend"
 
 [tool.uv]
 exclude-newer = "7 days"
+exclude-newer-package = { psychopy = false }
 
 [tool.pdm.build]
 includes = []
