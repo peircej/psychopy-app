@@ -1202,11 +1202,14 @@ class RunnerRibbon(ribbon.FrameRibbon):
             callback=parent.runLocal
         ).Disable()
         # stop
-        self.addButton(
+        stopBtn = self.addButton(
             section="py", name="pystop", label=_translate("Stop"), icon='stop',
             tooltip=_translate("Stop the current (Python) script"),
             callback=parent.stopTask
-        ).Disable()
+        )
+        stopBtn.Disable()
+        if sys.platform == 'win32':
+            stopBtn.Bind(wx.EVT_LEFT_DOWN, self._stopOnMouseDown)
 
         self.addSeparator()
 
@@ -1269,3 +1272,10 @@ class RunnerRibbon(ribbon.FrameRibbon):
             tooltip=_translate("Switch to Runner view"),
             callback=parent.app.showRunner
         ).Disable()
+
+    def _stopOnMouseDown(self, event):
+        """Stop before a fullscreen window can interrupt the mouse click."""
+        button = event.GetEventObject()
+        button.Disable()
+        self.GetParent().stopTask(event)
+        event.Skip()
