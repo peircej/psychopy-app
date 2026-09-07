@@ -146,11 +146,12 @@ class DeviceManagerDlg(wx.Dialog):
         self.populate()
     
     def validate(self):
-        # enable/disable OK button if every page is okay
-        self.okBtn.Enable(all([
-            self.profilesNotebook.GetPage(i).warnings.OK 
-            for i in range(self.profilesNotebook.GetPageCount())
-        ]))
+        if hasattr(self, "okBtn"):
+            # enable/disable OK button if every page is okay
+            self.okBtn.Enable(all([
+                self.profilesNotebook.GetPage(i).warnings.OK 
+                for i in range(self.profilesNotebook.GetPageCount())
+            ]))
     
     def onOK(self, evt):
         # run on OK methods from all params

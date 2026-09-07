@@ -126,7 +126,6 @@ class DevicePanel(ScrolledPanel):
         for key, val in device.profile.items():
             prop = wx.propgrid.StringProperty(key, key, str(val))
             self.profileCtrl.Append(prop)
-            prop.ChangeFlag(wx.propgrid.PG_PROP_READONLY, True)
         self.profileCtrl.FitColumns()
         self.profileCtrl.SetMinSize((-1, 128))
         self.sizer.Add(
