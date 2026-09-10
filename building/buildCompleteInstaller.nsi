@@ -34,7 +34,7 @@
 !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
 
 ; License page
-!insertmacro MUI_PAGE_LICENSE "..\psychopy\LICENSE.txt"
+!insertmacro MUI_PAGE_LICENSE "${LICENSE_FILE}"
 ; Components page NB having multiple components was annoying with uninstall
 ;!insertmacro MUI_PAGE_COMPONENTS
 ; Choice for multiuser or single user install - note that this page only 
@@ -134,7 +134,7 @@ Section "PsychoPy" SEC01
   continue_inst:
     ;AppDir is the path to the psychopy app folder
     Var /GLOBAL AppDir
-    StrCpy $AppDir "$InstDir\Lib\site-packages\psychopy\app"
+    StrCpy $AppDir "$InstDir\Lib\site-packages\psychopy_app"
 
     ;Create an exclusion list
     ;!insertmacro UNINSTALLER_DATA_BEGIN

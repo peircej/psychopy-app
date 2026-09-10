@@ -309,7 +309,7 @@ class AppSigner:
         # then build new one
 
         icon = (thisFolder.parent /
-                'psychopy/app/Resources/psychopy.icns').resolve()
+                'src/psychopy_app/Resources/psychopy.icns').resolve()
         background = (thisFolder / "dmg722x241.tiff").resolve()
         dmgbuild.build_dmg(
                 filename=dmgFilename,
@@ -376,9 +376,9 @@ class AppSigner:
 
 
 def main():
-
-    with open(thisFolder.parent / "psychopy/VERSION") as f:
-        defaultVersion = f.read().strip()
+    import psychopy
+    defaultVersion = psychopy.__version__
+    
     parser = argparse.ArgumentParser(description="Codesigning PsychoPy.app")
     parser.add_argument("--app", help=("Path to the app bundle, "
                                        "assumed to be in dist/"),

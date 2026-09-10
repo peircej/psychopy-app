@@ -3,8 +3,12 @@ name: Publish package
 
 on:
     workflow_dispatch:
+      inputs:
+        tag: 
+          description: Tag to build release from
+          required: true
     release:
-        types: [published]
+        types: [released]
 
 permissions:
   contents: read
@@ -17,7 +21,17 @@ jobs:
           id-token: write
           contents: write 
         steps:
-        - uses: actions/checkout@master
+        - name: Checkout (from release)
+          if: ${{ startsWith(github.ref, 'refs/tags/') }}
+          uses: actions/checkout@v4
+          with:
+            ref: ${{ github.ref_name }}
+        
+        - name: Checkout (from inputs)
+          if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+          uses: actions/checkout@v4
+          with:
+            ref: ${{ github.event.inputs.tag }}
 
         - name: Setup Python
           uses: actions/setup-python@v3
@@ -32,8 +46,17 @@ jobs:
         - name: Install packages
           run: |
             uv pip install build twine wheel pdm pdm-backend polib six
-            uv pip install --no-deps git+https://github.com/psychopy/psychopy.git@release  # just for the version number
         
+        - name: Install PsychoPy (from release)
+          if: ${{ startsWith(github.ref, 'refs/tags/') }}
+          run: |
+            uv pip install --no-deps git+https://github.com/psychopy/psychopy.git@${{ github.ref_name }}  # just for the version number
+        
+        - name: Install PsychoPy (from tag)
+          if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+          run: |
+            uv pip install --no-deps git+https://github.com/psychopy/psychopy.git@${{ github.event.inputs.tag }}  # just for the version number
+
         - name: Build
           run: |
             # build with no-build-isolation to avoid installing build dependencies (slow on linux)
@@ -48,7 +71,6 @@ jobs:
               dist/*
         
         - name: Upload to PyPi
-          if: startsWith(github.ref, 'refs/tags/')
           uses: pypa/gh-action-pypi-publish@release/v1
 
         - name: Upload to GH Artifacts

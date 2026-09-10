@@ -20,7 +20,6 @@ import argparse
 from psychopy_app.themes import icons, colors, handlers
 
 import psychopy
-from psychopy import prefs
 from packaging.version import Version
 from . import urls
 from . import frametracker
@@ -164,7 +163,7 @@ class _Showgui_Hack():
 class PsychoPyApp(wx.App, handlers.ThemeMixin):
     _called_from_test = False  # pytest needs to change this
     # are we running a beta release?
-    beta = True
+    beta = False
 
     def __init__(self, arg=0, testMode=False, startView=None, profiling=False, **kwargs):
         """With a wx.App some things get done here, before App.__init__
@@ -242,8 +241,26 @@ class PsychoPyApp(wx.App, handlers.ThemeMixin):
         # import localization after wx:
         from psychopy import localization  # needed by splash screen
         self.localization = localization
-        self.locale = localization.setLocaleWX()
-        self.locale.AddCatalog(self.GetAppName())
+        # get locale from prefs
+        if self.prefs.app['locale'] in (None, "system locale", "system"):
+            locale = localization.getLocale()
+        else:
+            locale = self.prefs.app['locale']
+        # convert locale to a format wx likes
+        try:
+            locale = wx.Locale.FindLanguageInfo(
+                locale.replace("-", "_")
+            ).Language
+        except:
+            locale = wx.Locale.GetSystemLanguage()
+        if not wx.Locale.IsAvailable(locale):
+            locale = wx.Locale.GetSystemLanguage()
+        # set locale
+        self.locale = wx.Locale(locale)
+        self.localization.setLocale(
+            self.locale.Name
+        )
+        self.locale.AddCatalog(self.GetAppName())   
 
         logging.flush()
         self.onInit(
@@ -532,7 +549,7 @@ class PsychoPyApp(wx.App, handlers.ThemeMixin):
         fonts.CodeFont.pointSize = self._codeFont.GetPointSize()
         # that gets most of the properties of _codeFont but the FaceName
         # FaceName is set in the setting of the theme:
-        self.theme = prefs.app['theme']
+        self.theme = self.prefs.app['theme']
 
         # load plugins so they're available before frames are created
         if splash:
@@ -670,7 +687,7 @@ class PsychoPyApp(wx.App, handlers.ThemeMixin):
             if v('3.0') <= v(wx.__version__) < v('4.0'):
                 _Showgui_Hack()  # returns ~immediately, no display
                 # focus stays in never-land, so bring back to the app:
-                if prefs.app['defaultView'] in ['all', 'builder', 'coder', 'runner']:
+                if self.prefs.app['defaultView'] in ['all', 'builder', 'coder', 'runner']:
                     self.showBuilder()
                 else:
                     self.showCoder()
@@ -1264,8 +1281,8 @@ class PsychoPyApp(wx.App, handlers.ThemeMixin):
             value = value.code
 
         # Store new theme
-        prefs.app['theme'] = value
-        prefs.saveUserPrefs()
+        psychopy.prefs.app['theme'] = value
+        psychopy.prefs.saveUserPrefs()
         # Reset icon cache
         icons.iconCache.clear()
         # Set theme at module level

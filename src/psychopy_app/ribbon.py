@@ -70,17 +70,10 @@ class FrameRibbon(wx.Panel, handlers.ThemeMixin):
             List of section objects which were added
         """
         from importlib import metadata
-        # start off with no entry points or sections
-        entryPoints = []
+        # start off with no sections
         sections = []
-        # iterate through all entry point groups
-        for thisGroup, eps in metadata.entry_points().items():
-            # get entry points for matching group
-            if thisGroup == group:
-                # add to list of all entry points
-                entryPoints += eps
         # iterate through found entry points
-        for ep in entryPoints:
+        for ep in metadata.entry_points(group=group):
             try:
                 # load (import) module
                 cls = ep.load()

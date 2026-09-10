@@ -1,8 +1,9 @@
 import polib
 import pathlib
 
-libRoot = pathlib.Path(__file__).absolute().parent.parent / "psychopy"
-root = libRoot / "app" / "locale"
+libRoot = pathlib.Path(__file__).absolute().parent.parent
+root = libRoot / "src"
+print(f"compiling .po files in {root.absolute()}")
 
 def compilePoFiles(root=root, errIfEmpty=True):
     """Looks for all paths matching **/*.po and compiles to a .mo file using

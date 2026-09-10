@@ -4,13 +4,12 @@
 
 import os
 import sys
-from sys import platform
+import platform
 import setuptools  # noqa: setuptools complains if it isn't explicitly imported before distutils
 from distutils.core import setup
 from packaging.version import Version
-import bdist_mpkg  # noqa: needed to build bdist, even though not explicitly used here
 import py2app  # noqa: needed to build app bundle, even though not explicitly used here
-from ctypes.util import find_library
+from ctypes import util
 import importlib
 from building import compile_po
 from building import semanticVersion
@@ -25,26 +24,59 @@ def glob_to_list(path, glob_pattern='*'):
     return [str(p.absolute()) for p in Path(path).glob(glob_pattern)]
 
 compile_po.compilePoFiles()
-semanticVersion.updateVersionFile()
-semanticVersion.updateGitShaFile()
+# semanticVersion.updateVersionFile()
+# semanticVersion.updateGitShaFile()
 
+def find_library(libName):
+    """Search for the specified library in system paths and homebrew directories."""
+
+    # libPath = util.find_library(libName)
+    # if libPath:
+    #     print(f"Found {libName} library in system paths: {libPath}")
+    #     return libPath
+    # search homebrew
+    if platform.machine() == 'arm64':
+        homebrewLibs = Path('/opt/homebrew')  # default homebrew location on Apple Silicon
+    else:
+        homebrewLibs = Path('/usr/local/lib')  # default homebrew location on Intel Macs
+    libPath = list(homebrewLibs.glob(f'**/{libName}.dylib'))
+    if len(libPath) > 0:
+        print(f"Found multiple {libName} libraries: {libPath}")
+        libPath = libPath[0]  # take the first match
+    if libPath:
+        print(f"Using {libName} library: {libPath}")
+        return str(libPath)
+    
 #define the extensions to compile if necess
 packageData = []
 requires = []
 
-if platform != 'darwin':
+if sys.platform != 'darwin':
     raise RuntimeError("setupApp.py is only for building Mac Standalone bundle")
+if sys.platform == 'darwin' and platform.machine() == 'arm64':
+    homebrewLibs = Path('/opt/homebrew')  # default homebrew location on Apple Silicon
+else:
+    homebrewLibs = Path('/usr/local/libs')  # default homebrew location on Intel Macs
 
-resources = glob_to_list(root / 'psychopy/app/Resources', '*')
-frameworks = [ # these installed using homebrew
-              find_library("libevent"),
-              find_library("libmp3lame"),
-              find_library("libglfw"),
-              # libffi comes in the system
-              "/usr/local/opt/libffi/lib/libffi.dylib",
-              ]
+frameworks = []
+# check dylibs
+homebrewNames = {
+    'libevent': 'libevent',
+    'libglfw': 'glfw',
+    'libffi': 'libffi',
+    'libmp3lame': 'lame'
+}
+for libName in ["libevent", "libglfw", "libffi", "libmp3lame"]:
+    libPath = find_library(libName)
+    if not libPath:
+        brewName = homebrewNames.get(libName, libName)
+        raise ImportError(f"Couldn't find {libName} library. Try installing it using homebrew like this?: brew install {brewName}")
+    frameworks.append(libPath)
+
 opencvLibs = glob_to_list(Path(sys.exec_prefix, 'lib'), 'libopencv*.2.4.dylib')
 frameworks.extend(opencvLibs)
+
+resources = glob_to_list(root / 'src/psychopy_app/Resources', '*')
 
 import macholib
 #print("~"*60 + "macholib version: "+macholib.__version__)
@@ -77,9 +109,8 @@ includes = ['_sitebuiltins',  # needed for help()
             'imp', 'subprocess', 'shlex',
             'shelve',  # for scipy.io
             '_elementtree', 'pyexpat',  # for openpyxl
-            'pyo', 'greenlet', 'zmq', 'tornado',
+            'greenlet', 'zmq', 'tornado',
             'psutil',  # for iohub
-            'tobii_research',  # need tobii_research file and tobiiresearch pkg
             'soundfile', 'sounddevice', 'readline',
             'xlwt',  # writes excel files for pandas
             'msgpack_numpy',
@@ -186,7 +217,7 @@ else:
     print("All packages appear to be present. Proceeding to build...")
 
 setup(
-    app=[str(root / 'psychopy/app/psychopyApp.py')],
+    app=[str(root / 'src/psychopy_app/psychopyApp.py')],
     options=dict(py2app=dict(
             includes=includes,
             packages=packages,
@@ -195,7 +226,7 @@ setup(
             argv_emulation=False,  # must be False or app bundle pauses (py2app 0.21 and 0.24 tested)
             site_packages=True,
             frameworks=frameworks,
-            iconfile= str(root / 'psychopy/app/Resources/psychopy.icns'),
+            iconfile= str(root / 'src/psychopy_app/Resources/psychopy.icns'),
             plist=dict(
                 CFBundleIconFile='psychopy.icns',
                 CFBundleName               = "PsychoPy",
@@ -215,7 +246,8 @@ setup(
                 NSMicrophoneUsageDescription="This app may require access to the microphone to record audio for experiments.",
                 NSCameraUsageDescription="This app may require access to the camera to record video for experiments.",                   
             ),
-    ))  # end of the options dict
+    )),  # end of the options dict
+    install_requires=[],
 )
 
 
