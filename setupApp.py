@@ -84,7 +84,6 @@ includes = ['_sitebuiltins',  # needed for help()
             'xlwt',  # writes excel files for pandas
             'msgpack_numpy',
             'configparser',
-            'ntplib',  # for egi-pynetstation
             ]
 packages = ['pydoc',  # needed for help()
             'setuptools', 'wheel', # for plugin installing
@@ -126,7 +125,6 @@ packages = ['pydoc',  # needed for help()
             'zeroconf', 'ifaddr',  # for pupillabs plugin (fail to build)
             'websocket', # dependency for emotiv that doesn't install nicely from plugins
             'moviepy',  # used for a range of of movie-based backends
-            'egi_pynetstation',  # to be removed in future
             ]
 
 # Add packages that older PsychoPy (<=2023.1.x) shipped, for useVersion() compatibility
