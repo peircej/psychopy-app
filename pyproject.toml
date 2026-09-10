@@ -2,7 +2,7 @@
 [project]
 name = "psychopy-app"
 dynamic = ["version"]
-requires-python = ">=3.9, <3.12"
+requires-python = ">=3.10, <3.13"
 description = "The PsychoPy App is the wxPython application to support the PsychoPy lib but also see PsychoPy Studio"
 readme ={file = "README.md", content-type = "text/markdown"}
 license = "GPL-3.0-or-later"
