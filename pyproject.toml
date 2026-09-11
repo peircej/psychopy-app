@@ -25,24 +25,24 @@ classifiers = [
     ]
 dependencies = [
     "psychopy",
-    "websockets==16.0",  # new in 2023.2 for session.py
+    "websockets",  # new in 2023.2 for session.py
     # for the app
-    "wxPython==4.2.5",
-    "markdown-it-py==4.2.0",
-    "requests==2.34.2",
-    "future==1.0.0",  # only to support legacy versions in useVersion
+    "wxPython >= 4.1.1",
+    "markdown-it-py",
+    "requests",
+    "future",  # only to support legacy versions in useVersion
     # supporting plugins
-    "setuptools==82.0.1",
+    "setuptools",
     # pavlovia connections
-    "python-gitlab==8.4.0",
-    "gitpython==3.1.50",
+    "python-gitlab",
+    "gitpython",
     # psychoJS conversions
-    "astunparse==1.6.3",
-    "esprima==4.0.1",
-    "jedi==0.20.0",
-    "packaging==26.2",
-    "beautifulsoup4==4.15.0",
-    "pytz==2026.2",
+    "astunparse",
+    "esprima",
+    "jedi >= 0.16",
+    "packaging>=24.0",
+    "beautifulsoup4",
+    "pytz",
 ]
 
 [project.optional-dependencies]  # This is optional dependencies
