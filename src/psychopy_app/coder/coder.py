@@ -2344,8 +2344,14 @@ class CoderFrame(BaseAuiFrame, handlers.ThemeMixin):
         self.app.updateWindowMenu()
         self.fileBrowserWindow.updateFileBrowser()
         # update pavlovia project
-        self.project = pavlovia.getProject(self.currentDoc.filename)
-        self.ribbon.buttons['pavproject'].updateInfo()
+        try:
+            self.project = pavlovia.getProject(self.currentDoc.filename)
+            self.ribbon.buttons['pavproject'].updateInfo()
+        except Exception as err:
+            # experiment might not need Pavlovia, so demote the error to logging
+            logging.error(
+                f"Failed to load Pavlovia project associated with {self.currentDoc.filename}, reason: {err}"
+            )
 
     def fileOpen(self, event=None, filename=None):
         if not filename:
