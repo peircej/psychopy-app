@@ -11,7 +11,6 @@ from packaging.version import Version
 import py2app  # noqa: needed to build app bundle, even though not explicitly used here
 from ctypes import util
 import importlib
-from building import compile_po
 from building import semanticVersion
 from pathlib import Path
 import psychopy
@@ -23,7 +22,6 @@ def glob_to_list(path, glob_pattern='*'):
     """Convert a glob pattern to a list of files."""
     return [str(p.absolute()) for p in Path(path).glob(glob_pattern)]
 
-compile_po.compilePoFiles()
 # semanticVersion.updateVersionFile()
 # semanticVersion.updateGitShaFile()
 
