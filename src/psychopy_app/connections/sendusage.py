@@ -49,7 +49,7 @@ def sendUsageStats(app=None):
         systemInfo = platform.system() + platform.release()
     u = "https://usage.psychopy.org/submit.php?date=%s&sys=%s&version=%s&misc=%s"
     URL = u % (dateNow, systemInfo, v, miscInfo)
-    print(f"Using URL: {URL}")
+    
     try:
         req = web.urllib.request.Request(URL)
         if certifi:
